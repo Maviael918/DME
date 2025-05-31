@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;">
+  <title>Controle de Colaboradores - Merenda Escolar</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <h1>Departamento de Merenda Escolar</h1>
+
+  <!-- Próximo colaborador -->
+  <section id="proximo">
+    <h2>Próximo da Vez</h2>
+    <div id="proximo-colaborador" class="destaque">Carregando...</div>
+  </section>
+
+  <!-- Ranking de saídas -->
+  <section id="ranking">
+    <h2>Ranking de Saídas <small>(últimos 12 meses)</small></h2>
+    <ul id="lista-ranking"></ul>
+  </section>
+
+  <!-- Formulário de registro -->
+  <section id="formulario">
+    <h2>Registrar Serviço Externo</h2>
+    <form id="form-saida">
+      <label for="colaboradores">Selecionar colaborador(es):</label>
+      <div id="colaboradores" class="botao-colaboradores">
+        <button type="button" class="botao-colaborador" data-nome="Maviael">Maviael</button>
+        <button type="button" class="botao-colaborador" data-nome="Raminho">Raminho</button>
+        <button type="button" class="botao-colaborador" data-nome="Bruninho">Bruninho</button>
+        <button type="button" class="botao-colaborador" data-nome="Matheus">Matheus</button>
+        <button type="button" class="botao-colaborador" data-nome="isaac">Isaac</button>
+      </div>
+      <input type="hidden" id="colaboradoresSelecionados" name="colaboradoresSelecionados" />
+
+      <label for="localidade">Localidade:</label>
+      <select id="localidade">
+        <option value="Sede">Sede</option>
+        <option value="Setor A">Setor A</option>
+        <option value="Setor B">Setor B</option>
+        <option value="Setor C">Setor C</option>
+         <option value="Setor D">Setor D</option>
+          <option value="Setor E">Setor E</option>
+           <option value="Setor F">Setor F</option>
+        <option value="São Domingos">São Domingos</option>
+       <option value="Fanzenda Nova">Fanzenda Nova</option>
+       
+
+      </select>
+
+      <button type="submit">Registrar Saída</button>
+    </form>
+  </section>
+
+  <!-- Histórico com botão e inputs ocultos -->
+  <section id="historico">
+    <h2>Histórico Recente</h2>
+    <ul id="lista-historico"></ul>
+
+    <!-- Botão principal -->
+    <button id="mostrar-filtro">📥 Baixar Histórico Filtrado (PDF)</button>
+
+    <!-- Filtro oculto (aparece ao clicar no botão acima) -->
+    <div id="filtro-pdf" style="display: none; margin-top: 10px;">
+      <label for="data-inicio">De:</label>
+      <input type="date" id="data-inicio" />
+      
+      <label for="data-fim">Até:</label>
+      <input type="date" id="data-fim" />
+
+      <button id="baixar-pdf">Gerar PDF</button>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/script.js"></script>
+
+  <!-- Script para exibir o filtro -->
+  <script>
+    document.getElementById("mostrar-filtro").addEventListener("click", () => {
+      const filtro = document.getElementById("filtro-pdf");
+      filtro.style.display = filtro.style.display === "none" ? "block" : "none";
+      
+      // Configura datas padrão (últimos 7 dias)
+      if (!document.getElementById("data-inicio").value) {
+        const dataInicio = new Date();
+        dataInicio.setDate(dataInicio.getDate() - 7);
+        document.getElementById("data-inicio").valueAsDate = dataInicio;
+        document.getElementById("data-fim").valueAsDate = new Date();
+      }
+    });
+  </script>
+</body>
+</html>
