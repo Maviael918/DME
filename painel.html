@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
+  <title>D.M.E - Painel de Controle</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-truck"></i> Departamento de Merenda Escolar</h1>
+
+    <section class="top-actions">
+        <button id="btn-registrar-servico" class="btn btn-top"><i class="fa-solid fa-file-pen"></i> Registrar Serviço</button>
+        <button id="btn-historico-geral" class="btn btn-top"><i class="fa-solid fa-timeline"></i> Histórico Geral</button>
+        <button id="btn-analise-micro" class="btn btn-top"><i class="fa-solid fa-chart-pie"></i> Análise de Setor</button>
+    </section>
+
+    <div class="tabs-container">
+        <div class="tabs main-tabs">
+            <button class="tab-link active" data-tab="tab-proximo" id="tab-link-proximo"><i class="fa-solid fa-person-walking-arrow-right"></i> Próximo da Vez</button>
+            <button class="tab-link" data-tab="tab-ranking" id="tab-link-ranking"><i class="fa-solid fa-ranking-star"></i> Ranking</button>
+        </div>
+
+        <div class="tabs secondary-tabs">
+            <button class="tab-link" data-tab="tab-outros-controles"><i class="fa-solid fa-sliders"></i> Outros Controles</button>
+            <button class="tab-link" data-tab="tab-sao-domingos" id="tab-link-sao-domingos"><i class="fa-solid fa-map-location-dot"></i> São Domingos</button>
+        </div>
+    </div>
+
+    <div id="tab-proximo" class="tab-content active">
+        <section id="proximo">
+            <div class="section-header">
+                <h2>Próximo da Vez</h2>
+            </div>
+            <div id="proximo-colaborador" class="destaque">
+              <span id="nome-proximo"></span>
+              <button id="btn-pular" class="btn-pular" title="Pular colaborador sugerido">Pular <i class="fa-solid fa-forward"></i></button>
+            </div>
+        </section>
+    </div>
+
+    <div id="tab-ranking" class="tab-content">
+        <section id="ranking">
+            <div class="section-header">
+                <h2>Ranking de Saídas</h2>
+            </div>
+            <div id="lista-ranking"></div>
+        </section>
+    </div>
+
+    <div id="tab-outros-controles" class="tab-content">
+      <section>
+        <div class="section-header">
+          <h2><i class="fa-solid fa-tools"></i> Ferramentas Adicionais</h2>
+        </div>
+        <div class="botao-colaboradores" style="justify-content: center;">
+          <button id="btn-abrir-ponto" class="btn btn-secondary"><i class="fa-solid fa-calendar-check"></i> Registrar Ponto</button>
+          <button id="btn-abrir-horas" class="btn btn-secondary"><i class="fa-solid fa-clock"></i> Lançar Horas Extras</button>
+          <button id="btn-ver-resumo-horas" class="btn btn-secondary"><i class="fa-solid fa-hourglass-half"></i> Ver Resumo de Horas</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-sao-domingos" class="tab-content">
+      <section id="sao-domingos-info">
+        <div class="section-header"><h2><i class="fa-solid fa-map-location-dot"></i> Análise do Setor: São Domingos</h2></div>
+        <div><h4><i class="fa-solid fa-clock-rotate-left"></i> Últimos 3 Históricos do Setor</h4><ul id="ultimos-tres-sao-domingos"></ul></div>
+        <hr style="margin: 25px 0; border: 1px solid var(--bg-color);">
+        <div><h4><i class="fa-solid fa-users"></i> Sugestão de Equipe</h4><div id="equipe-sugerida-sao-domingos" style="font-size: 1.5rem; font-weight: bold; color: var(--success-color); text-align: center; margin: 10px 0;"></div><p id="justificativa-sao-domingos" style="font-size: 0.9rem; color: var(--light-text-color); background-color: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;"></p></div>
+      </section>
+    </div>
+
+  </div>
+
+  <div id="modal-registrar-servico" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-registrar-servico">&times;</span>
+      <h2><i class="fa-solid fa-file-pen"></i> Registrar Serviço Externo</h2>
+      <form id="form-saida">
+        <label>Selecionar colaborador(es):</label>
+        <div id="colaboradores" class="botao-colaboradores">
+          <button type="button" class="botao-colaborador" data-nome="Maviael">Maviael</button>
+          <button type="button" class="botao-colaborador" data-nome="Raminho">Raminho</button>
+          <button type="button" class="botao-colaborador" data-nome="Bruninho">Bruninho</button>
+          <button type="button" class="botao-colaborador" data-nome="Matheus">Matheus</button>
+          <button type="button" class="botao-colaborador" data-nome="Isaac">Isaac</button>
+          <button type="button" class="botao-colaborador" data-nome="Mikael">Mikael</button>
+        </div>
+        <input type="hidden" id="colaboradoresSelecionados" name="colaboradoresSelecionados" />
+        <label for="localidade">Localidade:</label>
+        <select id="localidade">
+          <option value="Sede">Sede</option>
+          <option value="Setor A">Setor A</option>
+          <option value="Setor B">Setor B</option>
+          <option value="Setor C">Setor C</option>
+          <option value="Setor D">Setor D</option>
+          <option value="Setor E">Setor E</option>
+          <option value="Setor F">Setor F</option>
+          <option value="São Domingos">São Domingos</option>
+          <option value="Fazenda Nova">Fazenda Nova</option>
+        </select>
+        <label for="observacao-saida">Observações (Opcional):</label>
+        <textarea id="observacao-saida" placeholder="Descreva falhas, ausências ou outros detalhes importantes..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Registrar e Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-historico-geral" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-historico-geral">&times;</span>
+      <h2><i class="fa-solid fa-timeline"></i> Histórico Recente</h2>
+      <div id="lista-historico"></div>
+    </div>
+  </div>
+
+  <div id="modal-metricas" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-metricas">&times;</span>
+      <h2><i class="fa-solid fa-chart-pie"></i> Colaborador Mais Ativo por Setor</h2>
+      <div id="metricas-content"></div>
+    </div>
+  </div>
+
+  <div id="modal-ponto" class="modal"><div class="modal-content"><span class="modal-close" data-modal="modal-ponto">&times;</span><h2><i class="fa-solid fa-calendar-check"></i> Registrar Ponto</h2><form id="form-ponto"><label for="ponto-colaborador">Colaborador:</label><select id="ponto-colaborador" required></select><label for="ponto-data">Data:</label><input type="date" id="ponto-data" required><label for="ponto-tipo">Tipo de Ocorrência:</label><select id="ponto-tipo" required><option value="Falta">Falta</option><option value="Falta Justificada">Falta Justificada</option><option value="Atraso">Atraso</option></select><label for="ponto-obs">Observação:</label><textarea id="ponto-obs" placeholder="Detalhes da ocorrência..."></textarea><button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Salvar</button></form></div></div>
+  <div id="modal-horas" class="modal"><div class="modal-content"><span class="modal-close" data-modal="modal-horas">&times;</span><h2><i class="fa-solid fa-clock"></i> Lançar Horas Extras</h2><form id="form-horas"><label for="horas-colaborador">Colaborador:</label><select id="horas-colaborador" required></select><label for="horas-data">Data:</label><input type="date" id="horas-data" required><label for="horas-excedentes">Horas Excedentes:</label><input type="number" step="0.5" id="horas-excedentes" required placeholder="Ex: 2.5"><label for="horas-justificativa">Justificativa:</label><textarea id="horas-justificativa" placeholder="Motivo..." required></textarea><button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Lançar</button></form></div></div>
+  <div id="modal-resumo-horas" class="modal"><div class="modal-content"><span class="modal-close" data-modal="modal-resumo-horas">&times;</span><h2><i class="fa-solid fa-hourglass-half"></i> Resumo de Horas Extras Pendentes</h2><div id="resumo-horas-content"></div></div></div>
+
+  <div id="modal-pular-motivo" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-pular-motivo">&times;</span>
+      <h2><i class="fa-solid fa-comment-dots"></i> Motivo para Pular a Vez</h2>
+      <form id="form-pular-motivo">
+        <label for="pular-motivo-texto">Por favor, descreva o motivo:</label>
+        <textarea id="pular-motivo-texto" required placeholder="Ex: Colaborador em atestado, férias, etc..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-check"></i> Confirmar e Pular</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/script.js"></script>
+
+  <div id="toast-message" class="toast-container"></div>
+</body>
+</html>
