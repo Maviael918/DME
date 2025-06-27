@@ -1,0 +1,123 @@
+body {
+    background-color: var(--bg-color);
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.btn-voltar {
+    display: block;
+    width: fit-content;
+    margin: -10px auto 25px auto;
+    text-decoration: none;
+    background-color: var(--light-text-color);
+    color: white;
+}
+.btn-voltar:hover {
+    background-color: var(--text-color);
+}
+
+
+/* Estilos do Formulário */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-danger {
+    background-color: var(--accent-color);
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c42d38;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+.btn-success:hover {
+    background-color: #217a6f;
+}
+
+
+/* Estilos da Seção de Consulta */
+#busca-colaborador-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Estilos do Relatório */
+#resultado-container #titulo-resultado-busca {
+    border-bottom: none;
+    margin-bottom: 20px;
+}
+
+#conteudo-resultado-busca h4 {
+    color: var(--primary-color);
+    margin-top: 25px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+#conteudo-resultado-busca h4:first-child {
+    margin-top: 0;
+}
+
+#saldo-geral-container {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.saldo-positivo {
+    color: var(--success-color);
+}
+
+.saldo-negativo {
+    color: var(--accent-color);
+}
+
+.report-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.data-table-wrapper {
+    overflow-x: auto;
+}
