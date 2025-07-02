@@ -90,12 +90,12 @@
     const backButton = document.getElementById('backButton');
 
     if (updatesSeenVersion === currentVersion) {
-      window.location.href = "login.html";
-    } else {
-      localStorage.setItem('updates_seen_version', currentVersion);
+      // Se a versão atual já foi vista, redireciona para o login.
+      // window.location.href = "login.html";
     }
 
     closeButton.addEventListener('click', () => {
+      localStorage.setItem('updates_seen_version', currentVersion);
       window.location.href = "login.html";
     });
 

@@ -6,37 +6,20 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const CURRENT_VERSION = "4.0";
-const LAST_SEEN_VERSION_KEY = "lastSeenUpdateVersion";
+
 
 const formLogin = document.getElementById("form-login");
-const updateModal = document.getElementById("update-modal");
-const updateVersionSpan = document.getElementById("update-version");
-const btnCloseModal = document.getElementById("btn-close-modal");
-const btnViewUpdates = document.getElementById("btn-view-updates");
 
-function showUpdateModal() {
-  updateVersionSpan.textContent = `v${CURRENT_VERSION}`;
-  updateModal.style.display = "flex";
-}
-
-function hideUpdateModal() {
-  updateModal.style.display = "none";
-  localStorage.setItem(LAST_SEEN_VERSION_KEY, CURRENT_VERSION);
-}
 
 // Check if the update modal should be shown on page load
 document.addEventListener("DOMContentLoaded", () => {
-  const lastSeenVersion = localStorage.getItem(LAST_SEEN_VERSION_KEY);
+  const lastSeenVersion = localStorage.getItem('updates_seen_version');
   if (lastSeenVersion !== CURRENT_VERSION) {
-    showUpdateModal();
+    window.location.href = "updates.html";
   }
 });
 
-btnCloseModal.addEventListener("click", hideUpdateModal);
 
-btnViewUpdates.addEventListener("click", () => {
-  window.location.href = "updates.html";
-});
 
 formLogin.addEventListener("submit", async (e) => {
   e.preventDefault();
