@@ -71,14 +71,26 @@ async function registrarHoras(event) {
 
     const diff = new Date(`${data}T${saida}`) - new Date(`${data}T${entrada}`);
     const horasTrabalhadas = diff / (1000 * 60 * 60);
-    const horasExcedentes = horasTrabalhadas - HORAS_DIARIAS_PADRAO;
+    const balancoHoras = horasTrabalhadas - HORAS_DIARIAS_PADRAO;
 
-    const { error } = await supabase.from('banco_horas').insert([{
-        colaborador_nome: nome,
-        data: data,
-        horas_excedentes: horasExcedentes.toFixed(2),
-        justificativa: justificativa || `Trabalho do dia ${new Date(data).toLocaleDateString('pt-BR')}`
-    }]);
+    let error;
+    if (balancoHoras >= 0) {
+        // Horas extras ou saldo positivo
+        ({ error } = await supabase.from('horas_extras').insert([{
+            colaborador_nome: nome,
+            data: data,
+            horas_excedentes: balancoHoras.toFixed(2),
+            justificativa: justificativa || `Trabalho do dia ${new Date(data).toLocaleDateString('pt-BR')}`
+        }]));
+    } else {
+        // Horas devidas ou saldo negativo
+        ({ error } = await supabase.from('horas_devidas').insert([{
+            colaborador_nome: nome,
+            data: data,
+            quantidade: Math.abs(balancoHoras).toFixed(2),
+            justificativa: justificativa || `Falta ou horas a compensar do dia ${new Date(data).toLocaleDateString('pt-BR')}`
+        }]));
+    }
 
     if (error) {
         showToast('Erro ao salvar as horas: ' + error.message, 'error');
@@ -131,35 +143,54 @@ async function buscarDadosColaborador(nome) {
     conteudoResultadoBusca.innerHTML = '<p>Buscando dados...</p>';
     saldoGeralContainer.innerHTML = '';
 
-    const { data: horas, error: errorHoras } = await supabase.from('banco_horas').select('*').eq('colaborador_nome', nome).order('data', { ascending: false });
+    const { data: horasExtras, error: errorHorasExtras } = await supabase.from('horas_extras').select('*').eq('colaborador_nome', nome).order('data', { ascending: false });
+    const { data: horasDevidas, error: errorHorasDevidas } = await supabase.from('horas_devidas').select('*').eq('colaborador_nome', nome).order('data', { ascending: false });
     const { data: ponto, error: errorPonto } = await supabase.from('registros_ponto').select('*').eq('colaborador_nome', nome).order('data', { ascending: false });
     const { data: historico, error: errorHistorico } = await supabase.from('historico').select('*').ilike('nomes', `%${nome}%`).order('data', { ascending: false });
 
-    if (errorHoras || errorPonto || errorHistorico) {
+    if (errorHorasExtras || errorHorasDevidas || errorPonto || errorHistorico) {
         conteudoResultadoBusca.innerHTML = `<p style="color: red;">Erro ao consultar dados.</p>`;
         return;
     }
 
     let saldoTotal = 0;
-    if (horas) {
-        horas.forEach(h => {
+    if (horasExtras) {
+        horasExtras.forEach(h => {
             if (h.status === 'Pendente') {
                 saldoTotal += h.horas_excedentes;
+            }
+        });
+    }
+    if (horasDevidas) {
+        horasDevidas.forEach(h => {
+            if (h.status === 'Pendente') {
+                saldoTotal -= h.quantidade;
             }
         });
     }
     saldoGeralContainer.innerHTML = `Saldo de Horas Pendente: <span class="${saldoTotal >= 0 ? 'saldo-positivo' : 'saldo-negativo'}">${saldoTotal.toFixed(2)} horas</span>`;
 
     let html = '';
-    html += '<h4><i class="fa-solid fa-clock"></i> Banco de Horas (Positivo/Negativo)</h4>';
-    if (horas && horas.length > 0) {
-        html += `<div class="data-table-wrapper"><table class="data-table" id="pdf-table-horas"><thead><tr><th>Data</th><th>Balanço do Dia</th><th>Status</th><th>Justificativa</th></tr></thead><tbody>`;
-        horas.forEach(h => {
+    html += '<h4><i class="fa-solid fa-clock"></i> Banco de Horas (Positivo)</h4>';
+    if (horasExtras && horasExtras.length > 0) {
+        html += `<div class="data-table-wrapper"><table class="data-table" id="pdf-table-horas-extras"><thead><tr><th>Data</th><th>Horas Extras</th><th>Status</th><th>Justificativa</th></tr></thead><tbody>`;
+        horasExtras.forEach(h => {
             html += `<tr><td>${new Date(h.data).toLocaleDateString('pt-BR')}</td><td>${h.horas_excedentes.toFixed(2)}</td><td>${h.status}</td><td>${h.justificativa}</td></tr>`;
         });
         html += '</tbody></table></div>';
     } else {
-        html += '<p>Nenhum registro de horas encontrado.</p>';
+        html += '<p>Nenhum registro de horas extras encontrado.</p>';
+    }
+
+    html += '<h4><i class="fa-solid fa-clock"></i> Banco de Horas (Negativo)</h4>';
+    if (horasDevidas && horasDevidas.length > 0) {
+        html += `<div class="data-table-wrapper"><table class="data-table" id="pdf-table-horas-devidas"><thead><tr><th>Data</th><th>Horas Devidas</th><th>Status</th><th>Justificativa</th></tr></thead><tbody>`;
+        horasDevidas.forEach(h => {
+            html += `<tr><td>${new Date(h.data).toLocaleDateString('pt-BR')}</td><td>${h.quantidade.toFixed(2)}</td><td>${h.status}</td><td>${h.justificativa}</td></tr>`;
+        });
+        html += '</tbody></table></div>';
+    } else {
+        html += '<p>Nenhum registro de horas devidas encontrado.</p>';
     }
 
     html += '<h4><i class="fa-solid fa-calendar-check"></i> Registros de Faltas</h4>';
@@ -190,10 +221,11 @@ async function pagarHoras() {
     if (!colaboradorConsultado) return;
     if (!confirm(`Você confirma o pagamento de todas as horas EXCEDENTES PENDENTES de ${colaboradorConsultado}?`)) return;
 
-    const { error } = await supabase.from('banco_horas').update({ status: 'Pago' }).eq('colaborador_nome', colaboradorConsultado).eq('status', 'Pendente').gt('horas_excedentes', 0);
+    const { error: errorExtras } = await supabase.from('horas_extras').update({ status: 'Pago' }).eq('colaborador_nome', colaboradorConsultado).eq('status', 'Pendente').gt('horas_excedentes', 0);
+    const { error: errorDevidas } = await supabase.from('horas_devidas').update({ status: 'Pago' }).eq('colaborador_nome', colaboradorConsultado).eq('status', 'Pendente').gt('quantidade', 0);
 
-    if (error) {
-        showToast(`Erro ao registrar pagamento: ${error.message}`, 'error');
+    if (errorExtras || errorDevidas) {
+        showToast(`Erro ao registrar pagamento: ${errorExtras?.message || errorDevidas?.message}`, 'error');
     } else {
         showToast(`Pagamento registrado com sucesso!`, 'success');
         buscarDadosColaborador(colaboradorConsultado);
@@ -213,7 +245,8 @@ async function gerarPDF() {
     const saldoHorasText = saldoGeralContainer.innerText;
 
     // Seleciona as tabelas por seus IDs únicos
-    const tableHoras = document.getElementById('pdf-table-horas');
+    const tableHorasExtras = document.getElementById('pdf-table-horas-extras');
+    const tableHorasDevidas = document.getElementById('pdf-table-horas-devidas');
     const tableFaltas = document.getElementById('pdf-table-faltas');
     const tableViagens = document.getElementById('pdf-table-viagens');
 
@@ -244,7 +277,8 @@ async function gerarPDF() {
         }
     };
 
-    finalY = addTableToPdf("Banco de Horas", tableHoras, finalY);
+    finalY = addTableToPdf("Banco de Horas (Positivo)", tableHorasExtras, finalY);
+    finalY = addTableToPdf("Banco de Horas (Negativo)", tableHorasDevidas, finalY);
     doc.setFontSize(12);
     doc.text(saldoHorasText, 14, finalY);
     finalY += 10;

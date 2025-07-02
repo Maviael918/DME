@@ -79,7 +79,29 @@
       <li><i class="fas fa-check-circle"></i> **Ranking de Saídas Inteligente:** A pontuação do ranking foi ajustada! Saídas para 'Sede' agora contam 1 ponto a cada 2 viagens, enquanto outras localidades (Setores A-F, São Domingos, Fazenda Nova) continuam valendo 1 ponto por viagem.</li>
       <li><i class="fas fa-check-circle"></i> **Informações do Sistema:** Adicionamos um botão 'Informações' no painel principal, explicando o funcionamento de cada recurso do sistema.</li>
     </ul>
-    <a href="login.html" class="back-button">Voltar para o Login</a>
+    <a href="login.html" class="back-button" id="backButton">Voltar para o Login</a>
+    <button class="back-button" id="closeButton" style="margin-left: 10px;">Fechar</button>
   </div>
+
+  <script>
+    const currentVersion = "4.0";
+    const updatesSeenVersion = localStorage.getItem('updates_seen_version');
+    const closeButton = document.getElementById('closeButton');
+    const backButton = document.getElementById('backButton');
+
+    if (updatesSeenVersion === currentVersion) {
+      window.location.href = "login.html";
+    } else {
+      localStorage.setItem('updates_seen_version', currentVersion);
+    }
+
+    closeButton.addEventListener('click', () => {
+      window.location.href = "login.html";
+    });
+
+    backButton.addEventListener('click', () => {
+      window.location.href = "login.html";
+    });
+  </script>
 </body>
 </html>
