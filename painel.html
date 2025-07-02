@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
+  <title>D.M.E - Painel de Controle</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-truck"></i> Departamento de Merenda Escolar <span style="font-size: 0.6em; vertical-align: super; color: var(--light-text-color);">v4.0</span></h1>
+
+    <div class="proactive-display-container">
+      <div id="most-proactive-display" class="proactive-card most-proactive-card">
+        <div class="description">Colaborador Mais Proativo</div>
+        <div><i class="fas fa-trophy"></i> <span class="proactive-name"></span></div>
+      </div>
+      <div id="least-proactive-display" class="proactive-card least-proactive-card">
+        <div class="description">Colaborador com Menos Serviços Externos</div>
+        <div><i class="fas fa-bed"></i> <span class="proactive-name"></span></div>
+      </div>
+    </div>
+
+    <section class="top-actions">
+        <button id="btn-historico-geral" class="btn btn-top"><i class="fa-solid fa-timeline"></i> Histórico Geral</button>
+        <button id="btn-analise-micro" class="btn btn-top"><i class="fa-solid fa-chart-pie"></i> Análise de Setor</button>
+        <a href="ponto.html" id="btn-registrar-ponto" class="btn btn-top"><i class="fa-solid fa-map-marker-alt"></i> Registro de Ponto</a>
+        <button id="btn-historico-colaborador" class="btn btn-top"><i class="fa-solid fa-user-chart"></i> Histórico Colaborador</button>
+        <button id="btn-selecao-manual" class="btn btn-top"><i class="fa-solid fa-user-gear"></i> Registro Direto</button>
+        <button id="btn-informacoes" class="btn btn-top"><i class="fa-solid fa-info-circle"></i> Informações</button>
+        <button id="btn-analise-colaborador" class="btn btn-top"><i class="fa-solid fa-user-check"></i> Análise por Colaborador</button>
+    </section>
+
+    <div class="tabs-container">
+        <div class="tabs main-tabs">
+            <button class="tab-link active" data-tab="tab-proximo" id="tab-link-proximo"><i class="fa-solid fa-file-pen"></i> Próximo da Vez</button>
+            <button class="tab-link" data-tab="tab-ranking" id="tab-link-ranking"><i class="fa-solid fa-ranking-star"></i> Ranking</button>
+            <button class="tab-link" data-tab="tab-sao-domingos" id="tab-link-sao-domingos"><i class="fa-solid fa-map-location-dot"></i> Setor: São Domingos</button>
+        </div>
+    </div>
+
+    <div id="tab-proximo" class="tab-content active">
+        <section id="proximo">
+            <div class="section-header">
+                <h2>Próximo da Vez</h2>
+            </div>
+            <div id="proximo-colaborador" class="destaque clickable-proximo">
+              <button id="btn-registrar-proximo" class="btn btn-registrar" title="Registrar saída para o colaborador sugerido"><i class="fa-solid fa-file-pen"></i> Registrar</button>
+              <span id="nome-proximo"></span>
+              <button id="btn-pular" class="btn-pular" title="Pular colaborador sugerido">Pular <i class="fa-solid fa-forward"></i></button>
+            </div>
+        </section>
+    </div>
+
+    <div id="tab-ranking" class="tab-content">
+        <section id="ranking">
+            <div class="section-header">
+                <h2>Ranking de Saídas</h2>
+            </div>
+            <div id="lista-ranking"></div>
+        </section>
+    </div>
+
+    <div id="tab-sao-domingos" class="tab-content">
+      <section id="sao-domingos-info">
+        <div class="section-header"><h2><i class="fa-solid fa-map-location-dot"></i> Análise do Setor: São Domingos</h2></div>
+        <div><h4><i class="fa-solid fa-clock-rotate-left"></i> Últimos 3 Históricos do Setor</h4><ul id="ultimos-tres-sao-domingos"></ul></div>
+        <hr style="margin: 25px 0; border: 1px solid var(--bg-color);">
+        <div><h4><i class="fa-solid fa-users"></i> Sugestão de Equipe</h4><div id="equipe-sugerida-sao-domingos" style="font-size: 1.5rem; font-weight: bold; color: var(--success-color); text-align: center; margin: 10px 0;"></div><p id="justificativa-sao-domingos" style="font-size: 0.9rem; color: var(--light-text-color); background-color: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;"></p></div>
+      </section>
+    </div>
+
+  </div>
+
+  <div id="modal-registrar-servico" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-registrar-servico">&times;</span>
+      <h2><i class="fa-solid fa-file-pen"></i> Registrar Serviço Externo</h2>
+      <form id="form-saida">
+        <label>Selecionar colaborador(es):</label>
+        <div id="colaboradores" class="botao-colaboradores">
+          <button type="button" class="botao-colaborador" data-nome="Maviael">Maviael</button>
+          <button type="button" class="botao-colaborador" data-nome="Raminho">Raminho</button>
+          <button type="button" class="botao-colaborador" data-nome="Bruninho">Bruninho</button>
+          <button type="button" class="botao-colaborador" data-nome="Matheus">Matheus</button>
+          <button type="button" class="botao-colaborador" data-nome="Isaac">Isaac</button>
+          <button type="button" class="botao-colaborador" data-nome="Mikael">Mikael</button>
+        </div>
+        <input type="hidden" id="colaboradoresSelecionados" name="colaboradoresSelecionados" />
+        <label for="localidade">Localidade:</label>
+        <select id="localidade">
+          <option value="Sede">Sede</option>
+          <option value="Setor A">Setor A</option>
+          <option value="Setor B">Setor B</option>
+          <option value="Setor C">Setor C</option>
+          <option value="Setor D">Setor D</option>
+          <option value="Setor E">Setor E</option>
+          <option value="Setor F">Setor F</option>
+          <option value="São Domingos">São Domingos</option>
+          <option value="Fazenda Nova">Fazenda Nova</option>
+        </select>
+        <label for="observacao-saida">Observações (Opcional):</label>
+        <textarea id="observacao-saida" placeholder="Descreva falhas, ausências ou outros detalhes importantes..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Registrar e Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-historico-geral" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-historico-geral">&times;</span>
+      <h2><i class="fa-solid fa-timeline"></i> Histórico Recente</h2>
+      <div id="lista-historico"></div>
+    </div>
+  </div>
+
+  <div id="modal-metricas" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-metricas">&times;</span>
+      <h2><i class="fa-solid fa-chart-pie"></i> Colaborador Mais Ativo por Setor</h2>
+      <div id="metricas-content"></div>
+    </div>
+  </div>
+
+  
+
+  <div id="modal-pular-motivo" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-pular-motivo">&times;</span>
+      <h2><i class="fa-solid fa-comment-dots"></i> Motivo para Pular a Vez</h2>
+      <form id="form-pular-motivo">
+        <label for="pular-motivo-texto">Por favor, descreva o motivo:</label>
+        <textarea id="pular-motivo-texto" required placeholder="Ex: Colaborador em atestado, férias, etc..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-check"></i> Confirmar e Pular</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-historico-colaborador" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-historico-colaborador">&times;</span>
+      <h2><i class="fa-solid fa-user-chart"></i> Histórico por Colaborador</h2>
+      <label for="select-colaborador-historico">Selecionar Colaborador:</label>
+      <select id="select-colaborador-historico"></select>
+      <div id="historico-colaborador-content">
+        <h3><i class="fa-solid fa-clock"></i> Horas Extras</h3>
+        <ul id="lista-horas-extras"><li>Nenhuma hora extra registrada.</li></ul>
+        <h3><i class="fa-solid fa-calendar-xmark"></i> Faltas</h3>
+        <ul id="lista-faltas"><li>Nenhuma falta registrada.</li></ul>
+        <h3><i class="fa-solid fa-ban"></i> Recusas de Serviço</h3>
+        <ul id="lista-recusas"><li>Nenhuma recusa de serviço registrada.</li></ul>
+        <h3><i class="fa-solid fa-map-location-dot"></i> Últimos 10 Setores Visitados</h3>
+        <ul id="lista-ultimos-setores"><li>Nenhum setor visitado recentemente.</li></ul>
+        <button id="btn-download-historico" class="btn btn-primary" style="width: 100%; margin-top: 20px;"><i class="fa-solid fa-download"></i> Baixar Histórico (PDF)</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/script.js"></script>
+
+  <div id="toast-message" class="toast-container"></div>
+
+  <div id="modal-informacoes" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-informacoes">&times;</span>
+      <h2><i class="fa-solid fa-info-circle"></i> Informações do Sistema</h2>
+      <div class="info-content">
+        <h3><i class="fa-solid fa-file-pen"></i> Registrar Serviço</h3>
+        <p>Esta função registra a saída de um ou mais colaboradores para um serviço externo. Selecione os colaboradores, a localidade e adicione observações se necessário. O sistema salva o histórico de cada serviço.</p>
+        
+        <h3><i class="fa-solid fa-timeline"></i> Histórico Geral</h3>
+        <p>Mostra um registro de todos os serviços externos realizados, incluindo quem participou, a data, a hora e a localidade.</p>
+        
+        <h3><i class="fa-solid fa-chart-pie"></i> Análise de Setor</h3>
+        <p>Exibe o colaborador que mais saiu para cada setor, ajudando a identificar os mais requisitados por área.</p>
+        
+        <h3><i class="fa-solid fa-map-marker-alt"></i> Registrar Ponto</h3>
+        <p>Permite o registro manual de ocorrências como faltas (justificadas ou não) e atrasos dos colaboradores.</p>
+
+        <h3><i class="fa-solid fa-person-walking-arrow-right"></i> Próximo da Vez</h3>
+        <p>O sistema sugere o próximo colaborador a ser enviado para um serviço, com base em um rodízio. Se o colaborador sugerido não puder ir, é possível "Pular" para o próximo da fila, informando o motivo.</p>
+
+        <h3><i class="fa-solid fa-ranking-star"></i> Ranking</h3>
+        <p>Apresenta um ranking de saídas dos colaboradores, mostrando quem mais realizou serviços externos.</p>
+
+        <h3><i class="fa-solid fa-map-location-dot"></i> Análise de Setor Específico (Ex: São Domingos)</h3>
+        <p>Fornece uma análise detalhada de um setor, mostrando os últimos históricos e sugerindo a equipe mais adequada com base nos dados.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-analise-colaborador" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-analise-colaborador">&times;</span>
+      <h2><i class="fa-solid fa-user-check"></i> Análise de Viagens por Colaborador</h2>
+      <div id="analise-colaborador-content"></div>
+    </div>
+  </div>
+</body>
+</html>

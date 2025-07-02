@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Banco de Horas e Ponto - D.M.E</title>
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/banco.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-clock"></i> Controle de Ponto e Banco de Horas</h1>
+    <a href="painel.html" class="btn btn-voltar"><i class="fa-solid fa-arrow-left"></i> Voltar ao Painel</a>
+
+    <section class="card">
+        <h2><i class="fa-solid fa-pencil-alt"></i> Registrar Nova Atividade</h2>
+        <form id="form-banco-horas">
+            <div class="form-grid">
+                <div>
+                    <label for="banco-colaborador">Colaborador:</label>
+                    <select id="banco-colaborador" required></select>
+                </div>
+                <div>
+                    <label for="banco-data">Data:</label>
+                    <input type="date" id="banco-data" required>
+                </div>
+                <div>
+                    <label for="banco-entrada">Hora de Entrada:</label>
+                    <input type="time" id="banco-entrada">
+                </div>
+                <div>
+                    <label for="banco-saida">Hora de Saída:</label>
+                    <input type="time" id="banco-saida">
+                </div>
+            </div>
+            <label for="banco-justificativa">Justificativa / Observação:</label>
+            <textarea id="banco-justificativa" placeholder="Ex: Serviço externo na escola X, demanda extra, etc."></textarea>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar Horas Trabalhadas</button>
+                <button type="button" id="btn-registrar-falta" class="btn btn-danger"><i class="fa-solid fa-calendar-times"></i> Registrar Falta</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2><i class="fa-solid fa-search"></i> Consultar Relatório Individual</h2>
+        <div id="busca-colaborador-container">
+            <label for="busca-colaborador-select">Selecione o Colaborador:</label>
+            <select id="busca-colaborador-select"></select>
+            <button id="btn-buscar-colaborador" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Ver Relatório</button>
+        </div>
+    </section>
+
+    <section id="resultado-container" class="card" style="display: none;">
+        <h2 id="titulo-resultado-busca"></h2>
+        <div id="saldo-geral-container">
+            </div>
+        <div id="conteudo-resultado-busca">
+            </div>
+        <div class="report-actions">
+             <button id="btn-pagar-horas" class="btn btn-success"><i class="fa-solid fa-check-circle"></i> Marcar Saldo Positivo como Pago</button>
+             <button id="btn-download-pdf" class="btn btn-primary"><i class="fa-solid fa-file-pdf"></i> Baixar Relatório em PDF</button>
+        </div>
+    </section>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/banco.js"></script>
+
+  <div id="toast-message" class="toast-container"></div>
+
+</body>
+</html>

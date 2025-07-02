@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Controle de Saídas</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Bem-vindo ao <span>D.M.E</span></h1>
+    <form id="form-login">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required />
+      
+      <label for="senha">Senha:</label>
+      <input type="password" id="senha" required />
+      
+      <button type="submit">Entrar</button>
+    </form>
+
+    <footer>
+      <p>Sistema Elaborado por <strong>Maviael Ananias</strong></p>
+    </footer>
+  </div>
+
+  <script type="module" src="login.js"></script>
+  <div id="update-modal" class="modal">
+    <div class="modal-content">
+      <h2>Nova Atualização! <span id="update-version"></span></h2>
+      <div class="update-actions">
+        <button id="btn-view-updates" class="btn-view-updates">Entenda o que mudou</button>
+        <button id="btn-close-modal" class="btn-close-modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Ponto e Horas - D.M.E</title>
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/banco.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-map-marker-alt"></i> Registro de Ponto e Horas</h1>
+    <a href="painel.html" class="btn btn-voltar"><i class="fa-solid fa-arrow-left"></i> Voltar ao Painel</a>
+
+    <section class="top-actions">
+        <button id="btn-show-registrar-ponto" class="btn btn-top"><i class="fa-solid fa-calendar-check"></i> Registrar Ponto</button>
+        <button id="btn-show-lancar-horas" class="btn btn-top"><i class="fa-solid fa-clock"></i> Lançar Horas</button>
+        <button id="btn-show-resumo-horas" class="btn btn-top"><i class="fa-solid fa-hourglass-half"></i> Resumo Horas</button>
+        <button id="btn-show-horas-devidas" class="btn btn-top"><i class="fa-solid fa-minus-circle"></i> Horas Devidas</button>
+        <button id="btn-show-banco-horas" class="btn btn-top"><i class="fa-solid fa-money-check-dollar"></i> Banco de Horas</button>
+    </section>
+
+    <section id="section-registrar-ponto" class="content-section active card">
+        <h2><i class="fa-solid fa-calendar-check"></i> Registrar Ocorrência</h2>
+        <form id="form-ponto">
+          <label for="ponto-colaborador">Colaborador:</label>
+          <select id="ponto-colaborador" required></select>
+          <label for="ponto-data">Data:</label>
+          <input type="date" id="ponto-data" required>
+          <label for="ponto-tipo">Tipo de Ocorrência:</label>
+          <select id="ponto-tipo" required>
+            <option value="Falta">Falta</option>
+            <option value="Falta Justificada">Falta Justificada</option>
+            <option value="Atraso">Atraso</option>
+          </select>
+          <label for="ponto-obs">Observação:</label>
+          <textarea id="ponto-obs" placeholder="Detalhes da ocorrência..."></textarea>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Salvar</button>
+        </form>
+    </section>
+
+    <section id="section-lancar-horas" class="content-section card">
+        <h2><i class="fa-solid fa-clock"></i> Lançar Horas Extras</h2>
+        <form id="form-horas">
+          <label for="horas-colaborador">Colaborador:</label>
+          <select id="horas-colaborador" required></select>
+          <label for="horas-data">Data:</label>
+          <input type="date" id="horas-data" required>
+          <label for="horas-excedentes">Horas Excedentes:</label>
+          <input type="number" step="0.5" id="horas-excedentes" required placeholder="Ex: 2.5">
+          <div class="horas-increment-buttons">
+            <button type="button" data-increment="0.5">+30min</button>
+            <button type="button" data-increment="1">+1h</button>
+            <button type="button" data-increment="2">+2h</button>
+            <button type="button" data-increment="-0.5">-30min</button>
+            <button type="button" data-increment="-1">-1h</button>
+          </div>
+          <label for="horas-justificativa">Justificativa:</label>
+          <textarea id="horas-justificativa" placeholder="Motivo..." required></textarea>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Lançar</button>
+        </form>
+    </section>
+
+    <section id="section-resumo-horas" class="content-section card">
+        <h2><i class="fa-solid fa-hourglass-half"></i> Resumo de Horas Extras</h2>
+        <div id="resumo-horas-content"></div>
+    </section>
+
+    <section id="section-horas-devidas" class="content-section card">
+        <h2><i class="fa-solid fa-minus-circle"></i> Registrar Horas Devidas</h2>
+        <form id="form-horas-devidas">
+          <label for="devidas-colaborador">Colaborador:</label>
+          <select id="devidas-colaborador" required></select>
+          <label for="devidas-data">Data:</label>
+          <input type="date" id="devidas-data" required>
+          <label for="devidas-quantidade">Quantidade de Horas Devidas:</label>
+          <input type="number" step="0.5" id="devidas-quantidade" required placeholder="Ex: 1.5">
+          <label for="devidas-justificativa">Justificativa:</label>
+          <textarea id="devidas-justificativa" placeholder="Motivo do atraso/saída antecipada..." required></textarea>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-minus-circle"></i> Registrar Horas Devidas</button>
+        </form>
+    </section>
+
+    <section id="section-banco-horas" class="content-section card">
+        <h2><i class="fa-solid fa-money-check-dollar"></i> Banco de Horas por Colaborador</h2>
+        <label for="banco-horas-colaborador-select">Selecione o Colaborador:</label>
+        <select id="banco-horas-colaborador-select"></select>
+        <button id="btn-ver-banco-horas" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Ver Banco de Horas</button>
+        <div id="banco-horas-detalhes"></div>
+    </section>
+
+  </div>
+
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/ponto.js"></script>
+  <div id="toast-message" class="toast-container"></div>
+</body>
+</html>
