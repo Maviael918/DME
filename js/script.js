@@ -836,9 +836,10 @@ async function gerarPdfHistoricoColaborador(colaboradorNome) {
 // --- INICIALIZAÇÃO E EVENT LISTENERS ---
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
     window.location.href = "login.html";
+    return;
   }
 
   preencherSelectsColaboradores();
