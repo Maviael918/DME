@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Uso e Assinatura</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-file-contract"></i> Termos de Uso e Assinatura</h1>
+    <p>Clique no botão abaixo para gerar e baixar o PDF com os termos de uso e sua assinatura registrada.</p>
+    <button id="btn-gerar-pdf" class="btn btn-primary" style="width: 100%; margin-top: 20px;"><i class="fa-solid fa-download"></i> Gerar e Baixar PDF</button>
+    <div class="termos-content-display" style="margin-top: 30px; padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--secondary-bg-color);">
+      <h2>Conteúdo dos Termos:</h2>
+      <div id="termos-content-placeholder">Carregando termos...</div>
+      <h2 style="margin-top: 20px;">Sua Assinatura Registrada:</h2>
+      <div class="signature-display-area">
+        <img id="assinatura-registrada-display" src="" alt="Sua Assinatura" style="max-width: 100%; height: auto; border: 1px solid #ccc; margin-top: 10px;" />
+        <p id="status-assinatura-display"></p>
+      </div>
+    </div>
+    <a href="painel.html" class="btn btn-secondary" style="margin-top: 20px;"><i class="fa-solid fa-arrow-left"></i> Voltar ao Painel</a>
+  </div>
+
+  <script src="js/jspdf.umd.min.js"></script>
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/termosAssinatura.js"></script>
+</body>
+</html>

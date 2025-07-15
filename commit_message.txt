@@ -1,0 +1,13 @@
+feat: Implementa melhorias no sistema de registro e ranking
+
+- **Correção do Alerta de Ponto:** A mensagem de sucesso ao registrar um ponto foi corrigida e agora é exibida corretamente.
+- **Lógica de Seleção Aprimorada:** A lógica de seleção de colaboradores no modal de registro foi refinada para uma experiência mais intuitiva.
+- **Correção do Registro no Modo Administrador:** O registro de serviços no modo administrador agora funciona corretamente, sem interferir na rotação normal dos colaboradores.
+- **Análise por Colaborador:** Adicionado um novo botão "Análise por Colaborador" que exibe a contagem de viagens de cada colaborador por setor.
+- **Regra da Sede no "Próximo da Vez":** Viagens para a "Sede" não fazem o colaborador perder a vez, a menos que ele tenha um saldo de duas ou mais viagens à "Sede" em comparação com outro colaborador.
+- **Exclusão da Última Saída:** O colaborador que participou da última saída não será o "Próximo da Vez" em sequência.
+- **Melhoria do Alerta de Sucesso:** A mensagem de "salvo com sucesso" agora aparece centralizada, em verde e com um ícone, para uma melhor experiência visual.
+- **Análise por Setor Aprimorada:** Agora você pode ver o colaborador mais ativo por setor, com base nas saídas registradas.
+- **Ranking de Saídas Inteligente:** A pontuação do ranking foi ajustada! Saídas para 'Sede' agora contam 1 ponto a cada 2 viagens, enquanto outras localidades (Setores A-F, São Domingos, Fazenda Nova) continuam valendo 1 ponto por viagem.
+- **Informações do Sistema:** Adicionamos um botão 'Informações' no painel principal, explicando o funcionamento de cada recurso do sistema.
+- **Botão Registrar Próximo:** Um botão "Registrar" foi adicionado ao lado do nome do próximo colaborador, permitindo um registro de serviço mais rápido e direto.
