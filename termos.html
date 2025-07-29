@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Uso e Assinatura Digital</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    h1 {
+      color: #3a506b;
+      margin-bottom: 20px;
+    }
+    .termos-content {
+      text-align: left;
+      margin-bottom: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    canvas {
+      border: 1px solid #3a506b;
+      background-color: #fff;
+      touch-action: none; /* Prevents scrolling on touch devices */
+      width: 100%;
+      max-width: 400px;
+      height: 150px;
+      display: block;
+      margin: 20px auto;
+    }
+    .signature-buttons button {
+      background-color: #3a506b;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .signature-buttons button:hover {
+      background-color: #2c3e50;
+    }
+    .btn-confirmar {
+      background-color: #28a745;
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+    }
+    .btn-confirmar:hover {
+      background-color: #218838;
+    }
+    .btn-termos {
+      display: block;
+      width: calc(100% - 30px); /* Adjust for padding */
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 10px auto;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    .btn-termos:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Termo de Ciência – Ferramenta de Apoio Operacional</h1>
+    <div class="termos-content">
+    <h1>
+<div class="assinatura">
+
+</div><h1></h1>
+
+<p>Esta ferramenta tem o objetivo de <strong>auxiliar de forma voluntária</strong> na organização interna das rotinas de trabalho.</p>
+
+<p>Seu uso é <strong>opcional</strong> e não substitui nenhum procedimento oficial ou obrigação do servidor.</p>
+
+<p>Trata-se de um recurso simples, criado com boa intenção para promover mais clareza, praticidade e colaboração no ambiente de trabalho.</p>
+
+<p>Ao utilizar a ferramenta, o servidor declara estar ciente de que se trata de um apoio complementar, sem qualquer caráter obrigatório ou substitutivo às normas institucionais.</p>
+
+
+    </div>
+
+    <h2>Assinatura Digital</h2>
+    <canvas id="signatureCanvas" width="400" height="150"></canvas>
+    <div class="signature-buttons">
+      <button id="clearSignature">Limpar</button>
+    </div>
+    <button id="confirmAndProceed" class="btn-confirmar">Confirmar e Prosseguir</button>
+  </div>
+
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module">
+    import { supabase } from './js/supabaseClient.js';
+
+    const canvas = document.getElementById('signatureCanvas');
+    const ctx = canvas.getContext('2d');
+    const clearButton = document.getElementById('clearSignature');
+    const confirmButton = document.getElementById('confirmAndProceed');
+
+    let drawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // Set canvas size for high-DPI displays
+    const scale = window.devicePixelRatio;
+    canvas.width = canvas.offsetWidth * scale;
+    canvas.height = canvas.offsetHeight * scale;
+    ctx.scale(scale, scale);
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000';
+
+    function getEventPos(event) {
+      const rect = canvas.getBoundingClientRect();
+      if (event.touches) {
+        return {
+          x: event.touches[0].clientX - rect.left,
+          y: event.touches[0].clientY - rect.top
+        };
+      }
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function startDrawing(e) {
+      drawing = true;
+      const pos = getEventPos(e);
+      [lastX, lastY] = [pos.x, pos.y];
+      e.preventDefault(); // Prevent scrolling on touch
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const pos = getEventPos(e);
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      [lastX, lastY] = [pos.x, pos.y];
+      e.preventDefault(); // Prevent scrolling on touch
+    }
+
+    function stopDrawing() {
+      drawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', stopDrawing);
+
+    clearButton.addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      alert('Assinatura limpa!');
+    });
+
+    confirmButton.addEventListener('click', async () => {
+      if (canvas.toDataURL().length > 1000) { // Check if canvas is not empty (some data exists)
+        const signatureData = canvas.toDataURL();
+
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+        if (userError) {
+          console.error('Erro ao obter usuário:', userError.message);
+          alert('Erro ao verificar o usuário. Por favor, tente novamente.');
+          return;
+        }
+
+        if (!user) {
+          alert('Você precisa estar logado para assinar os termos. Redirecionando para o login...');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Salvar a assinatura no Supabase
+        const { error } = await supabase
+          .from('user_signatures')
+          .insert([
+            { user_id: user.id, signature_image: signatureData }
+          ]);
+
+        if (error) {
+          console.error('Erro ao salvar assinatura no Supabase:', error.message);
+          alert('Erro ao salvar a assinatura. Por favor, tente novamente.');
+        } else {
+          alert('Termos aceitos e assinatura confirmada! Redirecionando...');
+          window.location.href = 'login.html'; // Ou para a página principal, se preferir
+        }
+      } else {
+        alert('Por favor, faça sua assinatura antes de prosseguir.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Controle de Saídas</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* Impede a rolagem da página */
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro semi-transparente */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999; /* Garante que fique acima de tudo */
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .overlay h1 {
+      color: #FFD700; /* Amarelo vibrante */
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    .overlay p {
+      color: #FFFFFF; /* Branco */
+      font-size: 1.5em;
+      line-height: 1.6;
+      max-width: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1>Acesso Temporariamente Indisponível</h1>
+    <p>
+      O sistema web está passando por atualizações importantes e está temporariamente inacessível.
+      Por favor, utilize o aplicativo móvel para continuar suas operações.
+      Agradecemos a compreensão!
+    </p>
+  </div>
+</body>
+</html>
