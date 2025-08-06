@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:dme_app/screens/admin_permissions_screen.dart';
 import 'package:dme_app/screens/register_extra_time_screen.dart';
 import 'package:dme_app/widgets/register_service_dialog.dart';
@@ -8,7 +9,6 @@ import 'screens/inicio_screen.dart';
 import 'screens/historico_screen.dart';
 import 'screens/analises_screen.dart';
 import 'screens/perfil_screen.dart';
-import 'package:dme_app/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +20,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final GlobalKey<InicioScreenState> _inicioScreenKey = GlobalKey();
-  StreamSubscription<List<Map<String, dynamic>>>? _historicoSubscription;
+  StreamSubscription<List<Map<String, dynamic>>>? _serviceRecordsSubscription;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   final List<String> _appBarTitles = <String>[
     'Início',
@@ -74,23 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _setupRealtimeListener() {
-    _historicoSubscription = Supabase.instance.client
-        .from('historico')
+    _serviceRecordsSubscription = Supabase.instance.client
+        .from('historico') // CORRIGIDO: Ouvindo a tabela correta
         .stream(primaryKey: ['id'])
         .listen((List<Map<String, dynamic>> data) {
-      print('Realtime update received: $data');
-      if (data.isNotEmpty && data.any((item) => item['id'] != null)) {
-        final newItem = data.firstWhere((item) => item['id'] != null, orElse: () => {});
-        if (newItem.isNotEmpty) {
-          final nomes = newItem['nomes'] ?? 'Desconhecido';
-          final localidade = newItem['localidade'] ?? 'Desconhecida';
-
-          print('New item detected: $newItem');
+          print('Realtime update received for historico: $data');
+          // Toca o som para qualquer novo registro
+          _audioPlayer.play(AssetSource('sounds/buzina.mp3'));
+          // Atualiza a tela de início para refletir a mudança
           _inicioScreenKey.currentState?.fetchProximoColaborador();
-          showNotification('Nova Saída Registrada', 'Nova saída registrada: $nomes para $localidade!');
-        }
-      }
-    });
+        },
+        onError: (error) {
+          print('Error in realtime listener: $error');
+        });
   }
 
   void _onItemTapped(int index) {
@@ -202,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _historicoSubscription?.cancel();
+    _serviceRecordsSubscription?.cancel();
     super.dispose();
   }
 }
