@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class PdfGenerator {
   static Future<void> generateAndOpenFile(String fileName, List<Map<String, dynamic>> historico) async {
@@ -14,7 +16,7 @@ class PdfGenerator {
           pw.Table.fromTextArray(
             headers: ['Data', 'Localidade', 'Nomes', 'Observação'],
             data: historico.map((item) => [
-              DateTime.parse(item['data']).toLocal().toString().substring(0, 16),
+              DateFormat('dd/MM/yyyy HH:mm').format(tz.TZDateTime.from(DateTime.parse(item['data']).toUtc(), tz.getLocation('America/Sao_Paulo'))),
               item['localidade'],
               item['nomes'],
               item['observacao'] ?? '',

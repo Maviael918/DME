@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:dme_app/widgets/success_animation_overlay.dart';
 
 class RegisterServiceDialog extends StatefulWidget {
   final VoidCallback onServiceRegistered;
@@ -37,7 +39,7 @@ class _RegisterServiceDialogState extends State<RegisterServiceDialog> {
 
       // Verificação de registro duplicado
       if (_selectedLocalidade != 'Sede') {
-        final hoje = DateTime.now();
+        final hoje = tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo'));
         final inicioDoDia = DateTime(hoje.year, hoje.month, hoje.day).toIso8601String();
 
         try {
@@ -106,16 +108,20 @@ class _RegisterServiceDialogState extends State<RegisterServiceDialog> {
           'nomes': _selectedColaboradores.join(', '),
           'localidade': _selectedLocalidade,
           'observacao': observacaoFinal,
-          'data': DateTime.now().toIso8601String(),
+          'data': tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo')).toIso8601String(),
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Serviço registrado com sucesso!')),
-          );
-          Navigator.of(context).pop(); // Close dialog
+          SuccessAnimationOverlay.show(context, message: 'Serviço registrado com sucesso!');
+          // Navigator.of(context).pop(); // Remove this line
           widget.onServiceRegistered(); // Chama o callback
         }
+        // Add a delay before popping the screen to allow the animation to be seen
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        });
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -131,6 +137,8 @@ class _RegisterServiceDialogState extends State<RegisterServiceDialog> {
       }
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

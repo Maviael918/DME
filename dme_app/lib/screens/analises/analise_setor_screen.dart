@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class AnaliseSetorScreen extends StatefulWidget {
   const AnaliseSetorScreen({super.key});
@@ -93,7 +95,7 @@ final List<String> _colaboradoresRotacao = ['Maviael', 'Raminho', 'Matheus', 'Is
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Text(
-                  '[${DateTime.parse(item['data']).toLocal().toString().substring(0, 10)}] - ${item['nomes']}',
+                  '[${DateFormat('dd/MM/yyyy').format(tz.TZDateTime.from(DateTime.parse(item['data']).toUtc(), tz.getLocation('America/Sao_Paulo')))}] - ${item['nomes']}',
                 ),
               );
             },

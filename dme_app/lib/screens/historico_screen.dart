@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class HistoricoScreen extends StatefulWidget {
   const HistoricoScreen({super.key});
@@ -66,7 +68,7 @@ class _HistoricoScreenState extends State<HistoricoScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Localidade: ${item['localidade']}'),
-                    Text('Data: ${DateTime.parse(item['data']).toLocal().toString().substring(0, 16)}'),
+                    Text('Data: ${DateFormat('dd/MM/yyyy HH:mm').format(tz.TZDateTime.from(DateTime.parse(item['data']).toUtc(), tz.getLocation('America/Sao_Paulo')))}'),
                     if (item['observacao'] != null && item['observacao'].isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),

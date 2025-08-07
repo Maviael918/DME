@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class ProximoDaVezService {
   static const List<String> TODOS_COLABORADORES = ['Maviael', 'Raminho', 'Matheus', 'Isaac', 'Mikael'];
@@ -16,7 +17,7 @@ static const List<String> COLABORADORES_ROTACAO = ['Maviael', 'Raminho', 'Matheu
       print('Initial colaboradores considerados: $colaboradoresConsiderados');
 
       // 2. Regra de Negócio: Determinar elegibilidade com base nas saídas do dia
-      final hojeString = DateTime.now().toIso8601String().substring(0, 10);
+      final hojeString = tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo')).toIso8601String().substring(0, 10);
       final viagensHoje = historico.where((d) => (d['data'] as String).startsWith(hojeString) && !LOCALIDADES_INVALIDAS.contains(d['localidade'])).toList();
       print('Viagens hoje: ${viagensHoje.length}');
 
@@ -59,7 +60,7 @@ static const List<String> COLABORADORES_ROTACAO = ['Maviael', 'Raminho', 'Matheu
       print('Últimas viagens não-Sede: $ultimasViagens');
 
       // 5. Encontra o(s) colaborador(es) com a data de última viagem mais antiga
-      DateTime dataMaisAntiga = DateTime.now();
+      DateTime dataMaisAntiga = tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo'));
       List<String> empatadosPorData = [];
 
       ultimasViagens.forEach((nome, data) {
@@ -116,7 +117,7 @@ static const List<String> COLABORADORES_ROTACAO = ['Maviael', 'Raminho', 'Matheu
   }
 
   String _desempatar(List<String> empatados, List<Map<String, dynamic>> historico) {
-    final umAnoAtras = DateTime.now().subtract(const Duration(days: 365));
+    final umAnoAtras = tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo')).subtract(const Duration(days: 365));
     final historicoUltimoAno = historico.where((r) => DateTime.parse(r['data']).isAfter(umAnoAtras)).toList();
 
     // Desempate 1: Menor número de saídas totais

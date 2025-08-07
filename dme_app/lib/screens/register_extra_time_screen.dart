@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:dme_app/widgets/success_animation_overlay.dart';
 
 class RegisterExtraTimeScreen extends StatefulWidget {
   const RegisterExtraTimeScreen({super.key});
@@ -13,7 +15,7 @@ class _RegisterExtraTimeScreenState extends State<RegisterExtraTimeScreen> {
   final _formKey = GlobalKey<FormState>();
   final List<String> _colaboradores = ['Maviael', 'Raminho', 'Matheus', 'Isaac', 'Mikael'];
   String? _selectedColaborador;
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo'));
   final _minutesController = TextEditingController();
   final _observationController = TextEditingController();
   bool _isLoading = false;
@@ -22,8 +24,8 @@ class _RegisterExtraTimeScreenState extends State<RegisterExtraTimeScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2020), 
-      lastDate: DateTime(2101),
+      firstDate: tz.TZDateTime(tz.getLocation('America/Sao_Paulo'), 2020),
+      lastDate: tz.TZDateTime(tz.getLocation('America/Sao_Paulo'), 2101),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -48,11 +50,15 @@ class _RegisterExtraTimeScreenState extends State<RegisterExtraTimeScreen> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Tempo extra registrado com sucesso!')),
-          );
-          Navigator.of(context).pop();
+          SuccessAnimationOverlay.show(context, message: 'Tempo extra registrado com sucesso!');
+          // Navigator.of(context).pop(); // Remove this line
         }
+        // Add a delay before popping the screen to allow the animation to be seen
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        });
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -66,6 +72,8 @@ class _RegisterExtraTimeScreenState extends State<RegisterExtraTimeScreen> {
       }
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

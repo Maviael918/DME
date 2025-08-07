@@ -5,13 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dme_app/supabaseClient.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:dme_app/services/notification_service.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    return await NotificationService.callbackDispatcher(task, inputData);
+  });
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print('Main: WidgetsFlutterBinding initialized.');
+
+  tz.initializeTimeZones(); // Initialize time zones
 
   await Supabase.initialize(
     url: supabaseUrl,
@@ -19,22 +32,22 @@ Future<void> main() async {
   );
   print('Main: Supabase initialized.');
 
+  NotificationService.initialize();
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
+  Workmanager().registerPeriodicTask(
+    "1",
+    "simpleTask",
+    frequency: Duration(minutes: 15),
+  );
+
   runApp(const MyApp());
   print('Main: MyApp started.');
 }
 
-Future<void> showNotification(String title, String body) async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'your channel id', 'your channel name', channelDescription: 'your channel description',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: false,
-  );
-  const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-    0, title, body, platformChannelSpecifics, payload: 'item x');
-  print('Notification shown: $title - $body');
-}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

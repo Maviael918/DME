@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:dme_app/widgets/success_animation_overlay.dart';
 
 class RemanejarDialog extends StatefulWidget {
   final String colaboradorAtual;
@@ -34,15 +36,19 @@ class _RemanejarDialogState extends State<RemanejarDialog> {
           'nomes': _selectedColaborador,
           'localidade': 'REMANEJAR SAIDA',
           'observacao': '${widget.colaboradorAtual} cedeu a vez para $_selectedColaborador. Motivo: ${_observacaoController.text}',
-          'data': DateTime.now().toIso8601String(), // Adicionado
+          'data': tz.TZDateTime.now(tz.getLocation('America/Sao_Paulo')).toIso8601String(), // Adicionado
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Remanejamento registrado com sucesso!')),
-          );
-          Navigator.of(context).pop(); // Close dialog
+          SuccessAnimationOverlay.show(context, message: 'Remanejamento registrado com sucesso!');
+          // Navigator.of(context).pop(); // Remove this line
         }
+        // Add a delay before popping the screen to allow the animation to be seen
+        Future.delayed(const Duration(seconds: 3), () {
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        });
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

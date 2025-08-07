@@ -3,13 +3,20 @@
 # Vai para a pasta onde o script está
 cd "$(dirname "$0")"
 
-# Inicializa Git se ainda não estiver inicializado
+# Verifica se é um repositório Git
 if [ ! -d ".git" ]; then
     echo "Inicializando repositório Git..."
     git init
     git branch -M main
     git remote add origin https://github.com/Maviael918/DME.git
+else
+    echo "Repositório Git já está inicializado."
 fi
+
+# Mostra o status
+echo "--------------------"
+git status
+echo "--------------------"
 
 # Solicita a mensagem do commit
 read -p "Digite a mensagem do commit: " mensagem
