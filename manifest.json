@@ -1,0 +1,21 @@
+{
+  "name": "DME - Controle de Saídas",
+  "short_name": "DME",
+  "description": "Sistema de Controle de Saídas para o Departamento de Merenda Escolar",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#eef1f5",
+  "theme_color": "#3a506b",
+  "icons": [
+    {
+      "src": "icons/imagem1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/imagem2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

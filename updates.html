@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Atualizações - Controle de Saídas</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .updates-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+    h1 {
+      color: #3a506b;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 15px;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+    }
+    li i {
+      color: #28a745;
+      margin-right: 10px;
+      font-size: 1.2em;
+      margin-top: 3px;
+    }
+    .back-button {
+      display: block;
+      width: fit-content;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background-color: #3a506b;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .back-button:hover {
+      background-color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="updates-container">
+    <h1>O que há de novo na versão 4.0</h1>
+    <ul>
+      <li><i class="fas fa-check-circle"></i> **Botão Registrar Próximo:** Um botão "Registrar" foi adicionado ao lado do nome do próximo colaborador, permitindo um registro de serviço mais rápido e direto.</li>
+      <li><i class="fas fa-check-circle"></i> **Correção no Alerta de Ponto:** A mensagem de sucesso ao registrar um ponto foi corrigida e agora é exibida corretamente.</li>
+      <li><i class="fas fa-check-circle"></i> **Lógica de Seleção Aprimorada:** A lógica de seleção de colaboradores no modal de registro foi refinada para uma experiência mais intuitiva.</li>
+      <li><i class="fas fa-check-circle"></i> **Correção do Registro no Modo Administrador:** O registro de serviços no modo administrador agora funciona corretamente, sem interferir na rotação normal dos colaboradores.</li>
+      <li><i class="fas fa-check-circle"></i> **Análise por Colaborador:** Adicionado um novo botão "Análise por Colaborador" que exibe a contagem de viagens de cada colaborador por setor.</li>
+      <li><i class="fas fa-check-circle"></i> **Regra da Sede no "Próximo da Vez":** Viagens para a "Sede" não fazem o colaborador perder a vez, a menos que ele tenha um saldo de duas ou mais viagens à "Sede" em comparação com outro colaborador.</li>
+      <li><i class="fas fa-check-circle"></i> **Exclusão da Última Saída:** O colaborador que participou da última saída não será o "Próximo da Vez" em sequência.</li>
+      <li><i class="fas fa-check-circle"></i> **Melhoria do Alerta de Sucesso:** A mensagem de "salvo com sucesso" agora aparece centralizada, em verde e com um ícone, para uma melhor experiência visual.</li>
+      <li><i class="fas fa-check-circle"></i> **Análise por Setor Aprimorada:** Agora você pode ver o colaborador mais ativo por setor, com base nas saídas registradas.</li>
+      <li><i class="fas fa-check-circle"></i> **Resumo de Saídas Inteligente:** A pontuação do ranking foi ajustada! Saídas para 'Sede' agora contam 1 ponto a cada 2 viagens, enquanto outras localidades (Setores A-F, São Domingos, Fazenda Nova) continuam valendo 1 ponto por viagem.</li>
+      
+    </ul>
+    <a href="login.html" class="back-button" id="backButton">Voltar para o Login</a>
+    <button class="back-button" id="closeButton" style="margin-left: 10px;">Fechar</button>
+  </div>
+
+  <script>
+    const currentVersion = "4.0";
+    const updatesSeenVersion = localStorage.getItem('updates_seen_version');
+    const closeButton = document.getElementById('closeButton');
+    const backButton = document.getElementById('backButton');
+
+    if (updatesSeenVersion === currentVersion) {
+      // Se a versão atual já foi vista, redireciona para o login.
+      // window.location.href = "login.html";
+    }
+
+    closeButton.addEventListener('click', () => {
+      localStorage.setItem('updates_seen_version', currentVersion);
+      window.location.href = "login.html";
+    });
+
+    backButton.addEventListener('click', () => {
+      localStorage.setItem('updates_seen_version', currentVersion);
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev https://cdnjs.cloudflare.com;
+    script-src 'self' 'unsafe-inline' https://*.supabase.co https://cdn.jsdelivr.net https://cdn.skypack.dev https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+    img-src 'self' data:; /* Adicionado para permitir imagens base64 */">
+  <title>D.M.E - Painel de Controle</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-truck"></i> Ferramenta de Apoio Operacional <span style="font-size: 0.6em; vertical-align: super; color: var(--light-text-color);">v4.0</span></h1>
+    <p id="user-greeting" style="font-size: 1em; color: var(--light-text-color); text-align: center; margin-top: -10px;"></p>
+    <p style="font-size: 0.8em; color: var(--light-text-color); text-align: center; margin-top: -10px;">bem vindo a ferrameta de apoio interno.uso voluntario. consulte os termos</p>
+
+    <div id="current-datetime" style="text-align: center; font-size: 0.9em; color: black; margin-bottom: 15px;"></div>
+
+    
+
+    <section class="top-actions">
+        <button id="btn-selecao-manual" class="btn btn-top"><i class="fa-solid fa-user-gear"></i> Ajustar Vez </button>
+        
+        
+        <a href="dashboard.html" class="btn btn-top"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        <button id="btn-ver-termos" class="btn btn-top"><i class="fa-solid fa-file-contract"></i> Termos</button>
+        <button id="btn-backup" class="btn btn-top"><i class="fa-solid fa-database"></i> Backup</button>
+        <button id="btn-logout" class="btn btn-top"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+    </section>
+
+    <div class="tabs-container">
+        <div class="tabs main-tabs">
+            
+            
+            
+            <button class="tab-link active" data-tab="tab-gerenciar-cards" id="tab-link-gerenciar-cards"><i class="fa-solid fa-id-card"></i> Gerenciar Cards</button>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    <div id="tab-gerenciar-cards" class="tab-content active">
+        <section id="gerenciar-cards-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-id-card"></i> Gerenciar Cards do App</h2>
+            </div>
+            <form id="addCardForm">
+                <h3>Adicionar Novo Card</h3>
+                <div class="input-group">
+                    <label for="cardTitle">Título:</label>
+                    <input type="text" id="cardTitle" required>
+                </div>
+                <div class="input-group">
+                    <label for="cardDescription">Descrição:</label>
+                    <textarea id="cardDescription"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="cardImageUrl">URL da Imagem (Opcional):</label>
+                    <input type="url" id="cardImageUrl">
+                </div>
+                <div class="input-group">
+                    <label for="cardOrder">Ordem de Exibição:</label>
+                    <input type="number" id="cardOrder" value="0">
+                </div>
+                <div class="input-group checkbox-group">
+                    <input type="checkbox" id="cardIsActive" checked>
+                    <label for="cardIsActive">Ativo</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Card</button>
+                <p id="cardMessage" class="error-message"></p>
+            </form>
+
+            <hr style="margin: 25px 0; border: 1px solid var(--bg-color);">
+
+            <h3>Cards Existentes</h3>
+            <div id="cardsList">
+                <!-- Cards serão carregados aqui via JS -->
+                <p>Nenhum card cadastrado ainda.</p>
+            </div>
+        </section>
+    </div>
+
+    
+
+  </div>
+
+  
+
+  <div id="modal-registrar-servico" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-registrar-servico">&times;</span>
+      <h2><i class="fa-solid fa-file-pen"></i> Registrar Serviço Externo</h2>
+      <form id="form-saida">
+        <label>Selecionar colaborador(es):</label>
+        <div id="colaboradores" class="botao-colaboradores">
+          <button type="button" class="botao-colaborador" data-nome="Maviael">Maviael</button>
+          <button type="button" class="botao-colaborador" data-nome="Raminho">Raminho</button>
+          <button type="button" class="botao-colaborador" data-nome="Matheus">Matheus</button>
+          <button type="button" class="botao-colaborador" data-nome="Isaac">Isaac</button>
+          <button type="button" class="botao-colaborador" data-nome="Mikael">Mikael</button>
+        </div>
+        <input type="hidden" id="colaboradoresSelecionados" name="colaboradoresSelecionados" />
+        <label for="localidade">Localidade:</label>
+        <select id="localidade">
+          <option value="Sede">Sede</option>
+          <option value="Setor A">Setor A</option>
+          <option value="Setor B">Setor B</option>
+          <option value="Setor C">Setor C</option>
+          <option value="Setor D">Setor D</option>
+          <option value="Setor E">Setor E</option>
+          <option value="Setor F">Setor F</option>
+          
+          <option value="Fazenda Nova">Fazenda Nova</option>
+        </select>
+        <label for="observacao-saida">Observações (Opcional):</label>
+        <textarea id="observacao-saida" placeholder="Descreva falhas, ausências ou outros detalhes importantes..."></textarea>
+        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Registrar e Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  
+
+  
+
+  
+
+  <div id="modal-pular-motivo" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-pular-motivo">&times;</span>
+      <h2><i class="fa-solid fa-arrows-rotate"></i> Remanejar Saída</h2>
+      <form id="form-pular-trocar-vez">
+        <label for="colaborador-troca-vez">Selecione o colaborador para quem a vez será remanejada:</label>
+        <select id="colaborador-troca-vez"></select>
+        <label for="localidade-remanejamento">Localidade do Remanejamento:</label>
+        <select id="localidade-remanejamento">
+          <option value="Sede">Sede</option>
+          <option value="Setor A">Setor A</option>
+          <option value="Setor B">Setor B</option>
+          <option value="Setor C">Setor C</option>
+          <option value="Setor D">Setor D</option>
+          <option value="Setor E">Setor E</option>
+          <option value="Setor F">Setor F</option>
+          
+          <option value="Fazenda Nova">Fazenda Nova</option>
+        </select>
+        <label for="observacao-pular-trocar">Observações (Opcional):</label>
+        <textarea id="observacao-pular-trocar" placeholder="Descreva o motivo ou detalhes adicionais..."></textarea>
+        <button type="button" class="btn btn-primary" style="width: 100%;" id="btn-confirmar-troca"><i class="fa-solid fa-check"></i> Confirmar Remanejamento</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-alerta-registro-recente" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-alerta-registro-recente">&times;</span>
+      <h2><i class="fa-solid fa-triangle-exclamation"></i> Alerta de Registro Recente</h2>
+      <p id="alerta-registro-recente-mensagem"></p>
+      <div class="modal-actions">
+        <button id="btn-alerta-registro-recente-sim" class="btn btn-primary"><i class="fa-solid fa-check"></i> Sim, Continuar</button>
+        <button id="btn-alerta-registro-recente-nao" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i> Não, Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script type="module" src="js/supabaseClient.js"></script>
+  <script type="module" src="js/script.js"></script>
+
+  <div id="toast-message" class="toast-container"></div>
+
+  <div id="modal-termos-assinatura" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" data-modal="modal-termos-assinatura">&times;</span>
+      <h2><i class="fa-solid fa-file-contract"></i> Termos de Uso e Sua Assinatura</h2>
+      <div class="termos-content-modal">
+        <!-- Conteúdo dos termos de uso será carregado aqui -->
+      </div>
+      <h3>Sua Assinatura Registrada:</h3>
+      <div class="signature-display-area">
+        <img id="assinatura-registrada" src="" alt="Sua Assinatura" style="max-width: 100%; height: auto; border: 1px solid #ccc;" />
+        <p id="status-assinatura"></p>
+      </div>
+      
+    </div>
+    <button id="btn-download-termos-assinatura" class="btn btn-primary" style="width: 100%; margin-top: 20px;"><i class="fa-solid fa-download"></i> Baixar Termos e Assinatura (PDF)</button>
+  </div>
+
+  <div id="modal-editar-historico" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" data-modal="modal-editar-historico">&times;</span>
+        <h2><i class="fa-solid fa-pen-to-square"></i> Editar Registro de Histórico</h2>
+        <form id="form-editar-historico">
+            <input type="hidden" id="edit-historico-id">
+            <div class="input-group">
+                <label for="edit-nomes">Nomes:</label>
+                <input type="text" id="edit-nomes" required>
+            </div>
+            <div class="input-group">
+                <label for="edit-localidade">Localidade:</label>
+                <input type="text" id="edit-localidade" required>
+            </div>
+            <div class="input-group">
+                <label for="edit-observacao">Observação:</label>
+                <textarea id="edit-observacao"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
+        </form>
+    </div>
+  </div>
+
+  
+<footer>
+    <div class="colaboradores-status">
+        <h3>Termo de Ciência e Concordância dos Colaboradores:</h3>
+        <ul>
+       
+                          <li><i class="fa-solid fa-user-doctor"></i> Jacile Thalia: <i class="fa-solid fa-check"></i></li>
+            <li><i class="fa-solid fa-user-tie"></i> Mikael: <i class="fa-solid fa-file-signature"></i></li>
+            <li><i class="fa-solid fa-user"></i> Isaac: <i class="fa-solid fa-file-signature"></i></li>
+            <li><i class="fa-solid fa-user"></i> Matheus: <i class="fa-solid fa-file-signature"></i></li>
+            <li><i class="fa-solid fa-user"></i> Raminho: <i class="fa-solid fa-check"></i></li>
+            <li><i class="fa-solid fa-code"></i> Maviael: <i class="fa-solid fa-code-branch"></i></li>
+           
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

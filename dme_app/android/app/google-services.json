@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "367441531839",
+    "project_id": "app-dme",
+    "storage_bucket": "app-dme.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367441531839:android:e60331efbd7913a667470a",
+        "android_client_info": {
+          "package_name": "com.example.dme_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfCPX6PkEEXtQcohqoCNvzExttzJVRDSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
